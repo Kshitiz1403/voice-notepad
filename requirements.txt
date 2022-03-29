@@ -1,0 +1,8 @@
+speechrecognition
+pyttsx3
+playsound==1.2.2
+gTTS
+PyAudio-0.2.11-cp39-cp39-win_amd64.whl
+# pyaudio
+# PyObjC
+# PyAudio
