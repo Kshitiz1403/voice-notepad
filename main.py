@@ -36,6 +36,9 @@ def record_audio(ask=False):
 
 
 def respond(voice_data):
+    if "hello" in voice_data:
+        alexa_speak("Hello!")
+        
     if "what is your name" in voice_data:
         alexa_speak("My name is Alexa")
 
