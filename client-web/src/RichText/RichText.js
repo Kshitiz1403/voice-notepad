@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { EditorState, Modifier } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { TranscriptContext } from './contexts/TranscriptContext';
+import { TranscriptContext } from '../contexts/TranscriptContext';
 
 class EditorConvertToHTML extends Component {
   static contextType = TranscriptContext

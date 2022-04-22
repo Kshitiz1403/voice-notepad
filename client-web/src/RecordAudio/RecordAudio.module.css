@@ -1,0 +1,14 @@
+.container{
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+}
+
+.buttons{
+    border-radius: 50px;
+    background-color: red;
+    height: 60px;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+}

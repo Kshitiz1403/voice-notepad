@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { TranscriptContext } from './contexts/TranscriptContext'
+import { TranscriptContext } from '../contexts/TranscriptContext'
+import { ReactComponent as Microphone } from '../assets/microphone.svg'
+import { ReactComponent as Square } from '../assets/square.svg'
+import stylesheet from './RecordAudio.module.css'
 const MicRecorder = require('mic-recorder-to-mp3')
 
 const RecordAudio = () => {
@@ -8,19 +11,20 @@ const RecordAudio = () => {
 
     const [isRecording, setIsRecording] = useState(false)
 
-    const recorder = new MicRecorder({
-        bitRate: 128
-    })
-    const recordAudio = () => {
-        recorder.start().then(() => {
+    const [Mp3Recorder, setMp3Recorder] = useState(new MicRecorder({ bitRate: 128 }));
+
+    const recordAudio = async () => {
+
+        Mp3Recorder.start().then(() => {
             setIsRecording(true)
         }).catch(err => console.error(err))
     }
 
-    const stopAudio = () => {
-        setIsRecording(false)
-        recorder.stop().getMp3().then(([buffer, blob]) => {
+    const stopAudio = async () => {
+
+        Mp3Recorder.stop().getMp3().then(([buffer, blob]) => {
             const file = new File(buffer, 'file.mp3', { type: blob.type, lastModified: Date.now() })
+            setIsRecording(false)
             sendAudio(file)
         })
     }
@@ -38,11 +42,16 @@ const RecordAudio = () => {
     }
 
     return (
-        <div>
-            {!isRecording ?
-                <button onClick={recordAudio}>Start</button> :
-                <button onClick={stopAudio}>Stop</button>
+        <div className={stylesheet.container}>
+            {isRecording ?
+                <div onClick={stopAudio} className={stylesheet.buttons} >
+                    <Square width='25px' fill='white' />
+                </div> :
+                <div onClick={recordAudio} className={stylesheet.buttons}>
+                    <Microphone width='27px' fill='white' />
+                </div>
             }
+
         </div>
     )
 }
