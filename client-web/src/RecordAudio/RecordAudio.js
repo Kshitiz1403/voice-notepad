@@ -37,7 +37,7 @@ const RecordAudio = () => {
             body: formData
         }).then(res => res.json()).then(jsonResponse => {
             console.log(jsonResponse)
-            setTextToInsert(jsonResponse)
+            setTextToInsert(`${jsonResponse} `)
         })
     }
 
