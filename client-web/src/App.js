@@ -1,37 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
-import { ReactMediaRecorder, useReactMediaRecorder } from "react-media-recorder";
+const MicRecorder = require('mic-recorder-to-mp3')
 
-function App() {
-  const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({ audio: true });
+const App = () => {
+  const recorder = new MicRecorder({
+    bitRate: 128
+  })
+  const recordAudio = () => {
 
-  const sendAudioFile = (file) => {
+
+    recorder.start().then(() => {
+
+    }).catch(err => console.error(err))
+  }
+
+  const sendAudio = (file) => {
     const formData = new FormData()
-    formData.append('file', file, 'audio.wav')
-    return fetch('http://localhost:5000', {
-      headers: {
-        Accept: "application/json"
-      }, method: 'POST',
+    formData.append('file', file, `${Math.floor(Math.random() * (10000 - 1 + 1)) + 1}.wav`)
+    fetch('http://localhost:5000', {
+      method: 'POST',
       body: formData
+    }).then(res => res.json()).then(jsonResponse => console.log(jsonResponse))
+  }
+
+  const stopAudio = () => {
+    recorder.stop().getMp3().then(([buffer, blob]) => {
+      const file = new File(buffer, 'file.mp3', { type: blob.type, lastModified: Date.now() })
+      sendAudio(file)
     })
   }
 
-  const onStopRecording = async () => {
-    stopRecording()
-    const blob = await fetch(mediaBlobUrl).then(r => r.blob())
-    sendAudioFile(blob)
-  }
-
-  console.log(status)
 
   return (
     <div className="App">
       <header className="App-header">
-        {status == 'idle' || status == 'stopped' ?
-          <button onClick={startRecording}>Start Recording</button>
-          :
-          <button onClick={onStopRecording}>Stop Recording</button>
-        }
+        <button onClick={recordAudio}>Start</button>
+        <button onClick={stopAudio}>Stop</button>
       </header>
     </div>
   );
