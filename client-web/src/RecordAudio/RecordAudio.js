@@ -2,12 +2,13 @@ import React, { useContext, useState } from 'react'
 import { TranscriptContext } from '../contexts/TranscriptContext'
 import { ReactComponent as Microphone } from '../assets/microphone.svg'
 import { ReactComponent as Square } from '../assets/square.svg'
+import { ReactComponent as Download } from '../assets/download.svg'
 import stylesheet from './RecordAudio.module.css'
 const MicRecorder = require('mic-recorder-to-mp3')
 
 const RecordAudio = () => {
 
-    const { setTextToInsert } = useContext(TranscriptContext)
+    const { setTextToInsert, currentText } = useContext(TranscriptContext)
 
     const [isRecording, setIsRecording] = useState(false)
 
@@ -36,13 +37,24 @@ const RecordAudio = () => {
             method: 'POST',
             body: formData
         }).then(res => res.json()).then(jsonResponse => {
-            console.log(jsonResponse)
-            setTextToInsert(`${jsonResponse} `)
+            if (jsonResponse) setTextToInsert(`${jsonResponse} `)
         })
+    }
+
+    const downloadTxtFile = () => {
+        const element = document.createElement('a')
+        const file = new Blob([currentText], { type: 'text/plain' })
+        element.href = URL.createObjectURL(file)
+        element.download = "transcript.txt"
+        document.body.appendChild(element)
+        element.click()
     }
 
     return (
         <div className={stylesheet.container}>
+            <div onClick={downloadTxtFile} className={stylesheet.buttons} style={{ backgroundColor: 'black' }}>
+                <Download width='25px' fill='white' />
+            </div>
             {isRecording ?
                 <div onClick={stopAudio} className={stylesheet.buttons} >
                     <Square width='25px' fill='white' />
@@ -51,7 +63,6 @@ const RecordAudio = () => {
                     <Microphone width='27px' fill='white' />
                 </div>
             }
-
         </div>
     )
 }

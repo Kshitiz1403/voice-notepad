@@ -8,7 +8,7 @@ class EditorConvertToHTML extends Component {
   static contextType = TranscriptContext
   constructor(props) {
     super(props);
-    this.state = { editorState: EditorState.createEmpty(), textToInsert: '' };
+    this.state = { editorState: EditorState.createEmpty(), textToInsert: '', currentText: '' };
   }
 
   componentDidMount() {
@@ -21,6 +21,10 @@ class EditorConvertToHTML extends Component {
       // call send text to editor
       this.state.textToInsert = this.context.textToInsert;
       this.sendTextToEditor(this.context.textToInsert)
+    }
+    if (this.context.currentText != this.state.editorState.getCurrentContent().getPlainText()) {
+      // updates context current text
+      this.context.setCurrentText(this.state.editorState.getCurrentContent().getPlainText())
     }
   }
 
